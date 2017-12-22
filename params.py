@@ -5,23 +5,20 @@ import numpy as np
 def get_params():
 
     '''
-
     Define dictionary with parameters
-
     '''
     params = {}
 
-    params['src'] = 'C:\Users\Roger\Desktop\Sessio 5'
-    
+    params['src'] = 'C:\Users\Roger\Desktop\Sessio 6'
+
     # Source data
-    params['root'] = 'C:\Users\Roger\Desktop\Sessio 5'
-    params['database'] = 'TB2016'
+    params['root'] = 'C:\Users\Roger\Desktop\Sessio 6'
+    params['database'] = 'TerrassaBuildings900'
 
     # To generate
-    
     # 'root_save' directory goes under 'root':
     params['root_save'] = 'save'
-    
+
     # All the following go under 'root_save':
     params['image_lists'] = 'image_lists'
     params['feats_dir'] = 'features'
@@ -30,35 +27,37 @@ def get_params():
     params['codebooks_dir'] = 'codebooks'
     params['classifiers_dir'] = 'classifiers'
     params['kaggle_dir'] = 'kaggle'
-   
+
 
     # Parameters
     params['split'] = 'val'
-    params['descriptor_size'] = 1024 # Number of clusters
-    params['descriptor_type'] = 'SIFT'
-    params['keypoint_type'] = 'SIFT'
-    params['max_size'] = 500 # Widht size
+    params['descriptor_size'] = 2048# Number of clusters
+    params['descriptor_type'] = 'RootSIFT'
+    params['keypoint_type'] = 'RootSIFT'
+    params['max_size'] = 300 # Widht size
     params['distance_type'] = 'euclidean'
-    params['save_for_kaggle'] = True
-    
+
     # Classification
     params['classifier'] = 'SVM'
-    params['svm_tune'] =[{'kernel': ['rbf'], 'gamma': [1e-1, 1e-2, 1e-3, 1e-4, 1e-5],
-                     'C': [0.1, 1, 10, 100, 1000]},
-                    {'kernel': ['linear'], 'C': [0.1, 1, 10, 100, 1000]}] # Parameters to tune the SVM
-    
+    params['svm_tune'] =[{'kernel': ['rbf'],
+                          'gamma': [1e-1, 1e-2, 1e-3, 1e-4, 1e-5],
+                          'C': [0.1, 1, 10, 100, 1000]},
+                         {'kernel': ['linear'], 'C': [0.1, 1, 10, 100, 1000]}]
+
     params['num_neighbors'] = 3 # For KNN
     params['manual_balance'] = False
-    
+
     # Normalization of local descriptors
     params['whiten'] = False
     params['normalize_feats'] = False
     params['scale'] = False
-    
-    
+
+
     # We read the training annotations to know the set of possible labels
-    data = pd.read_csv(os.path.join(params['root'],params['database'],'train','annotation.txt'), sep='\t', header = 0)
-    
+    data = pd.read_csv(os.path.join(params['root'],
+                       params['database'],'train',
+                       'annotation.txt'), sep='\t', header = 0)
+
     # Store them in the parameters dictionary for later use
     params['possible_labels'] = np.unique(data['ClassID'])
 
@@ -69,11 +68,8 @@ def get_params():
 
 def make_dir(dir):
     '''
-
     Creates a directory if it does not exist
-
     dir: absolute path to directory to create
-
     '''
     if not os.path.isdir(dir):
         os.makedirs(dir)
@@ -81,9 +77,7 @@ def make_dir(dir):
 def create_dirs(params):
 
     '''
-
     Create directories specified in params
-
     '''
     save_dir = os.path.join(params['root'], params['root_save'])
 
@@ -95,12 +89,14 @@ def create_dirs(params):
     make_dir(os.path.join(save_dir,params['codebooks_dir']))
     make_dir(os.path.join(save_dir,params['classifiers_dir']))
     make_dir(os.path.join(save_dir,params['kaggle_dir']))
-    
-    make_dir(os.path.join(save_dir,params['rankings_dir'],params['descriptor_type']))
-    make_dir(os.path.join(save_dir,params['rankings_dir'],params['descriptor_type'],params['split']))
-    make_dir(os.path.join(save_dir,params['classification_dir'],params['descriptor_type']))
+
+    make_dir(os.path.join(save_dir,params['rankings_dir'],
+                          params['descriptor_type']))
+    make_dir(os.path.join(save_dir,params['rankings_dir'],
+                          params['descriptor_type'],params['split']))
+    make_dir(os.path.join(save_dir,params['classification_dir'],
+                          params['descriptor_type']))
 
 if __name__ == "__main__":
 
     params = get_params()
-
